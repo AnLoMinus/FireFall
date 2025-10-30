@@ -1,0 +1,246 @@
+/* FireFall (FF) visual layer
+   Timestamp: 2025-10-30T14:45+02:00 | כ"ח תשרי תשפ"ו
+   Credits: AnLoMinus (Vision) • FireFall FF (World) • RepoCraft RC (Scaffold)
+*/
+
+/* reset בסיסי */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #000;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", "Alef", sans-serif;
+  color: #fff;
+  min-height: 100vh;
+  overflow: hidden; /* אין סקרול של העמוד, הכול בעולם אחד */
+  position: relative;
+}
+
+/* קנבס אש */
+#fireCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  z-index: 0;
+  background: radial-gradient(circle at 50% 80%, rgba(255,100,0,0.15) 0%, rgba(0,0,0,0) 70%);
+}
+
+/* שכבת דרמה מעל האש */
+.overlay-gradient {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255,180,80,0.22) 0%, rgba(0,0,0,0) 40%),
+    radial-gradient(circle at 50% 80%, rgba(255,0,0,0.18) 0%, rgba(0,0,0,0.8) 60%),
+    radial-gradient(circle at 50% 100%, rgba(0,0,0,0.9) 0%, rgba(0,0,0,1) 70%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.6;
+}
+
+/* מסגרת התוכן */
+.content-wrapper {
+  position: relative;
+  z-index: 5;
+  max-width: 600px;
+  width: calc(100% - 2rem);
+  margin: 5vh auto 0 auto;
+  padding-bottom: 8vh;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  text-shadow: 0 0 8px rgba(255,120,80,0.5), 0 0 32px rgba(255,60,0,0.3);
+  animation: fadeIn 1.5s ease both;
+}
+
+/* כותרת מותג */
+.brand-block {
+  text-align: center;
+  line-height: 1.3;
+}
+.project-name {
+  font-size: clamp(2rem, 2.5vw + 1rem, 2.75rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #fff;
+  text-shadow:
+    0 0 10px rgba(255,150,80,0.9),
+    0 0 40px rgba(255,60,0,0.6),
+    0 0 80px rgba(255,0,0,0.4);
+}
+.ff-tag {
+  font-size: 0.6em;
+  font-weight: 400;
+  color: #ffddc0;
+  padding: 0.2em 0.5em;
+  border-radius: 0.5em;
+  background: rgba(30,0,0,0.6);
+  border: 1px solid rgba(255,140,80,0.4);
+  box-shadow:
+    0 0 10px rgba(255,120,80,0.5),
+    0 0 30px rgba(255,60,0,0.5);
+  margin-inline-start: 0.4em;
+}
+.subtitle {
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: #ffedd6;
+  opacity: 0.8;
+  margin-top: 0.5rem;
+}
+
+/* פסוק */
+.verse-block {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,140,80,0.3);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  box-shadow:
+    0 0 20px rgba(255,100,50,0.4),
+    0 0 60px rgba(255,0,0,0.3);
+  text-align: center;
+}
+.verse-text {
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: #fff8f0;
+  line-height: 1.6;
+}
+.verse-ref {
+  font-size: 0.8rem;
+  color: #ffc9a1;
+  margin-top: 0.5rem;
+  letter-spacing: 0.03em;
+}
+
+/* מניפסט */
+.manifest-block {
+  display: grid;
+  gap: 0.8rem;
+  background: rgba(20,0,0,0.4);
+  border-radius: 12px;
+  border: 1px solid rgba(255,0,0,0.3);
+  padding: 1rem 1.25rem;
+  box-shadow:
+    0 0 15px rgba(255,40,0,0.4),
+    0 0 50px rgba(255,0,0,0.2);
+}
+.manifest-line {
+  font-size: 0.95rem;
+  color: #fff3e9;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* קריאה / תיקון */
+.call-block {
+  background: rgba(255,255,255,0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255,180,120,0.25);
+  padding: 1rem 1.25rem;
+  backdrop-filter: blur(6px);
+  box-shadow:
+    0 10px 40px rgba(255,140,80,0.25),
+    0 0 80px rgba(255,90,0,0.35);
+}
+.call-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff9f5;
+  margin-bottom: 0.75rem;
+  text-shadow: 0 0 10px rgba(255,200,150,0.7), 0 0 40px rgba(255,120,0,0.4);
+}
+.call-list {
+  list-style: none;
+  font-size: 0.9rem;
+  color: #ffe7d5;
+  line-height: 1.5;
+  display: grid;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+.call-footnote {
+  font-size: 0.8rem;
+  color: #ffdac2;
+  opacity: 0.8;
+  line-height: 1.4;
+  font-weight: 300;
+  text-align: center;
+}
+
+/* פוטר / קרדיטים */
+.footer-block {
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: #fff1e6;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,160,110,0.25);
+  border-radius: 16px;
+  padding: 1rem 1.25rem 1.5rem;
+  box-shadow:
+    0 0 30px rgba(255,100,50,0.4),
+    0 0 80px rgba(255,0,0,0.3);
+}
+.credits-title {
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.75rem;
+  text-shadow:
+    0 0 10px rgba(255,200,150,0.8),
+    0 0 40px rgba(255,120,0,0.5);
+}
+.credits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(90px,1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.credit-col {
+  text-align: center;
+}
+.credit-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #ffbe94;
+  margin-bottom: 0.2rem;
+}
+.credit-value {
+  font-size: 0.8rem;
+  color: #fffdf9;
+  font-weight: 500;
+}
+.timestamp-block {
+  text-align: center;
+  line-height: 1.4;
+  color: #ffd7c0;
+  margin-bottom: 1rem;
+}
+.pasuk-closing {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: #fff9f0;
+  text-align: center;
+  font-weight: 400;
+}
+.pasuk-closing .ref {
+  display: block;
+  color: #ffc7a0;
+  font-size: 0.7rem;
+  margin-top: 0.4rem;
+  text-shadow: 0 0 6px rgba(255,150,100,0.6);
+}
+
+/* אנימציות */
+@keyframes fadeIn {
+  from { opacity: 0; filter: blur(8px); transform: translateY(20px); }
+  to   { opacity: 1; filter: blur(0);    transform: translateY(0); }
+}
